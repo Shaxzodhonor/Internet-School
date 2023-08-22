@@ -1,0 +1,41 @@
+$input-focus-box-shadow:                none;
+
+@import "~bootstrap-scss/bootstrap";
+
+
+.dialog {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0,0.2);
+  & > div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spinner {
+    border: 5px solid white;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border-left: none;
+    border-top: none;
+    animation: example 1s linear infinite;
+  }
+  @keyframes example {
+    from  {  transform: rotate(0deg);}
+    to  { transform: rotate(360deg);}
+  }
+}
+
+// .se-component.se-image-container.__se__float-center {
+//   figure {
+//     margin: 0 auto;
+//   }
+// }
+// .se-component.se-image-container.__se__float-right {
+//   figure {
+//     margin-left: auto;
+//   }
+// }

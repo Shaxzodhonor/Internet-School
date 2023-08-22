@@ -1,0 +1,13 @@
+<svg id="gavel_black_24dp" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="Group_1660" data-name="Group 1660">
+    <rect id="Rectangle_1059" data-name="Rectangle 1059" width="16" height="16" fill="none"/>
+  </g>
+  <g id="Group_1662" data-name="Group 1662" transform="translate(0.666 0.666)">
+    <g id="Group_1661" data-name="Group 1661">
+      <rect id="Rectangle_1060" data-name="Rectangle 1060" width="2.667" height="13.333" transform="translate(2.834 4.714) rotate(-44.968)" fill="#7a868f"/>
+      <rect id="Rectangle_1061" data-name="Rectangle 1061" width="2.667" height="5.333" transform="matrix(0.707, -0.707, 0.707, 0.707, 5.658, 1.886)" fill="#7a868f"/>
+      <rect id="Rectangle_1062" data-name="Rectangle 1062" width="2.667" height="5.333" transform="translate(0 7.544) rotate(-45)" fill="#7a868f"/>
+      <rect id="Rectangle_1063" data-name="Rectangle 1063" width="8" height="1" transform="translate(0.334 13.334)" fill="#7a868f"/>
+    </g>
+  </g>
+</svg>

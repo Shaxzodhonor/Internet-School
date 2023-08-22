@@ -1,0 +1,93 @@
+.Registration {
+  background-color: #E5EDF1;
+  padding: 16px;
+  flex-grow: 1;
+  
+  overflow-y: scroll;
+  .title {
+    letter-spacing: 0.42px;
+    color: #1B1D2C;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding-bottom: 19px;
+    border-bottom: 1px solid #E4ECF0;
+    margin-bottom: 16px;
+    img {
+      margin-right: 8px;
+    }
+  }
+  .wrap {
+    display: flex;
+    align-items: center;
+    margin-bottom: 19px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(182, 169, 169, 0.3);
+    & > div {
+      gap: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .Input-wrapper {
+      margin: 0;
+      margin-right: 16px;
+    }
+    .output {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 16px;
+      background-color: #E3EEF3;
+      border-radius: 6px;
+      width: 280px;
+      margin-right: 16px;
+  
+      .left {
+        width: 136px;
+        letter-spacing: 0.36px;
+        color: #90B2C4;
+        font-size: 12px;
+        font-weight: 400;
+      }
+      .right {
+        letter-spacing: 0.42px;
+        color: #4F7D96;
+      }
+    }
+    button.large {
+      background-color: #FE844B;
+      box-shadow: 0px 3px 6px #FE844B3D;
+      border-radius: 5px;
+      border: none;
+      padding: 12px 16px;
+      color: #fff;
+      margin-right: 16px;
+      width: 216px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: box-shadow 0.8s ease;
+      &:hover {
+        box-shadow:  -0.4px 0.7px 2px  #000;
+      }
+    }
+    button.remove {
+      flex-shrink: 0;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      background-color: transparent;
+      box-shadow: 0px 3px 6px #FE844B3D;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease-in;
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: -0.4px 0.4px 2px #000;
+      }
+    }
+  }
+}
