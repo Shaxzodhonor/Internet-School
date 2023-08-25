@@ -2,6 +2,18 @@ $input-focus-box-shadow:                none;
 
 @import "~bootstrap-scss/bootstrap";
 
+@mixin vertical-truncate ($row) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: $row;
+  -webkit-box-orient: vertical;
+}
+
+@for $i from 1 through 30 {
+  .truncate-#{$i} {
+    @include vertical-truncate($i) 
+  }
+}
 
 .dialog {
   position: absolute;

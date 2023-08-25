@@ -2,6 +2,7 @@ import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
 import React, { useEffect, useState, } from 'react';
 import request from '../../request';
+import dayjs from 'dayjs';
 
 const News = () => {
   const [editor, setEditor] = useState()
@@ -17,12 +18,15 @@ const News = () => {
   },[])
   function SubmitForm (evt) {
     evt.preventDefault();
-    const form = evt.target.elements;
-    const obj = [...Array(4)].reduce((acc, _, id) => {    
-      return form[id]?.name === "file" ? {...acc, file: {id: form[id]?.value}} : {...acc, [form[id]?.name]: form[id]?.value}
-    },{})
-    
-    request.post("/news",{...obj, body: editor}).then(data => {      
+
+    const Form = evt.target;
+    const formData = new FormData(Form);
+    formData.append("about", editor || "")
+
+    formData.delete("date")
+    formData.append("date", dayjs(Form?.elements[1]?.value).format("DD/MM/YYYY"))
+
+    request.post("/news", formData).then(data => {      
       if(data.status === 200) {
         alert("Success")
         setAll((prevState) => ([data?.data?.data, ...prevState]))
@@ -86,7 +90,7 @@ return (
                 <div className="col">
                   <div className="mb-3">
                     <label htmlFor="newsSubmitImageID" className="form-label">Yangi xabar rasmi</label>
-                    <input name='file' className="form-control" type="text" id="newsSubmitImageID"/>
+                    <input name='file' className="form-control" type="file" id="newsSubmitImageID"/>
                   </div>
                 </div>
                 <div className="col">
@@ -103,6 +107,10 @@ return (
               <div className="mb-3">
                 <label htmlFor="news_who_from" className="form-label">Yangi xabar kimlarga taaluqli</label>
                 <input name='who_from' type="text" className="form-control" id="news_who_from" placeholder="masalan: ustozlar / o'quvchilar / boshqalar"/>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="news_shortly_submit" className="form-label">Qisqacha</label>
+                <textarea name="shortly" className="form-control" id="news_shortly_submit" cols="30" rows="5"></textarea>
               </div>
               <SunEditor
                 setContents={editor}                

@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Context as LoginContext } from "../../LoginContext";
+import React, { useEffect, useState } from 'react';
 import request from '../../request';
 
 const Files = () => {
-  const [login, setLogin] = useContext(LoginContext)
   const [output, setOutput] = useState();
   const [allFile, setAllFile] = useState([]);
   const [deleteItem, setItem] = useState(null);
@@ -20,11 +18,10 @@ const Files = () => {
     })
   },[])
 
-  
   function GetType(type){
     request.get(`/file/type/${type}`).then(data => {
       if(data?.status === 200) {
-        console.log(data?.data?.data);
+        setAllFile(data?.data?.data)
       }
     })
   }
@@ -37,42 +34,29 @@ const Files = () => {
     const formData = new FormData();
     formData.append("file", inputFile);
 
-    request.post(`/file?type=${Form[1]?.value}`, formData).then(data => {
-      console.log(data);
+    request.post(`/file?type=${Form[1]?.value}`, formData).then(data => {      
       if(data.status === "success") {
         setAllFile((prevState) => ([data?.data, ...prevState]))
-        setOutput(data?.data)
+        setOutput(data?.data?.data)
       }
     })
     .catch((err) => {
       alert(err?.message)
       console.log(err);
     })
-
-
   }
 
   function Delete () {
-    fetch(`${process.env.REACT_APP_API_ROOT}/file/${deleteItem}`, {
-      method: "Delete",
-      headers: {
-        "Authorization": "Bearer " + login
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
+    request.delete(`/file/${deleteItem}`).then(data => {      
       if(data.status === "success") {
         setAllFile(prevState => prevState.filter(val => val.id != deleteItem))
         document.getElementById("closeModal").click()
       }
-      
     })
     .catch((err) => {
       alert(err?.message)
       console.log(err);
     })
-
   }
 
   return (
@@ -81,8 +65,6 @@ const Files = () => {
       <div className="nav nav-tabs" id="nav-tab" role="tablist">
         <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">File qo'shish</button>
         <button className="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Files</button>
-        {/* <button className="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">---</button>
-        <button className="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" disabled>Disabled</button> */}
       </div>
     </nav>
     <div className="tab-content" id="nav-tabContent">
@@ -102,6 +84,7 @@ const Files = () => {
             <div className="col text-dark">
               <div>ID: {output?.id}</div>
               <div>LINK: {output?.link}</div>
+              <div>TYPE: {output?.type}</div>
             </div>
           </div>
           <button type='submit' className='btn btn-outline-dark mt-4'>Tayyor</button>

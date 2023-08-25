@@ -43,18 +43,17 @@ const Direction = () => {
   function DirectionId(evt) {
     evt.preventDefault();   
     
-    console.log(edit);
-    // request.post("/direction", edit).then(data => {      
-    //   if(data.status === 200) {
-    //     const mydata = data?.data?.data
-    //     // setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))
-    //     // alert("Success")
-    //   }
-    // })
-    // .catch((err) => {
-    //   alert(err?.message)
-    //   console.log(err);
-    // })
+    request.post("/direction", edit).then(data => {      
+      if(data.status === 200) {
+        const mydata = data?.data?.data
+        setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))
+        alert("Success")
+      }
+    })
+    .catch((err) => {
+      alert(err?.message)
+      console.log(err);
+    })
   
   }  
   function Delete (deleteItem) {
@@ -64,10 +63,9 @@ const Direction = () => {
         alert("Success")
       }
     })
-
   }
   function DirectionSelect(id) {
-    request.get(`/department/getAllDirectionByDepartment?id=${id}`).then(data => {
+    request.get(`/direction/department/${id}`).then(data => {
       if(data?.status === 200) {
         setAll(data?.data?.data)
       }
@@ -128,9 +126,9 @@ const Direction = () => {
             {
               all?.length 
               ? all.map(value => (
-                <div key={value.direction_id} className="border my-3 p-2 d-flex align-items-center">
-                  <span className='me-3 bg-info text-white px-2'>ID: {value.department_id}</span> {value.direction_name} 
-                  <button type='button' className='ms-auto btn btn-danger' onClick={Delete.bind(null, value.direction_id)}>O'chirish</button>
+                <div key={value.id} className="border my-3 p-2 d-flex align-items-center">
+                  <span className='me-3 bg-info text-white px-2'>ID: {value?.id}</span> {value?.name} 
+                  <button type='button' className='ms-auto btn btn-danger' onClick={Delete.bind(null, value?.id)}>O'chirish</button>
                   <button type='button' className='btn btn-danger' data-bs-toggle="modal" data-bs-target="#directionModal" onClick={()=> setEdit(value)}>Tahrirlash</button>
                 </div>
               )) : null
@@ -146,7 +144,7 @@ const Direction = () => {
                       <form onSubmit={DirectionId} className='border border-1 border-dark bg-white rounded p-5'>
                         <div className='mb-3'>
                           <label className="form-label">Bo'limni tanlang</label>
-                          <select className="form-select form-select" value={edit?.department_id}  onChange={(evt)=> setEdit(prSt => ({...prSt, department: {id: evt.target.value}}))}>
+                          <select className="form-select form-select" value={edit?.department?.id}  onChange={(evt)=> setEdit(prSt => ({...prSt, department: {id: evt.target.value}}))}>
                             <option disabled>Bo'limni tanlang</option>
                             {department?.length ? department.map((dep) => (
                               <option key={dep?.id} value={dep?.id}>{dep?.name}</option>
@@ -155,10 +153,10 @@ const Direction = () => {
                         </div>
                         <div className="mb-3">
                           <label htmlFor="direction_name_edit" className="form-label">Yo'naish nomi</label>
-                          <input type="text" className="form-control" id="direction_name_edit" value={edit?.direction_name || ""} onChange={(evt)=> setEdit(prSt => ({...prSt, name: evt.target.value}))}/>
+                          <input type="text" className="form-control" id="direction_name_edit" value={edit?.name || ""} onChange={(evt)=> setEdit(prSt => ({...prSt, name: evt.target.value}))}/>
                         </div>
                         <SunEditor
-                          setContents={edit?.body}                          
+                          setContents={edit?.history}                         
                           setOptions={{                
                             height: "900px",
                             font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],

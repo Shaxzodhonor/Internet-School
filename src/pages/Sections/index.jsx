@@ -7,7 +7,7 @@ const Sections = () => {
   const [sections, setSection] = useState()
 
   useEffect(()=> {
-    request.get(`${process.env.REACT_APP_API_ROOT}/department/getAll`).then(data => {
+    request.get(`http://13.233.237.234:8080/api/department/getAll`).then(data => {
       if(data.status === 200) {
         setSection(data?.data?.data)
       }
@@ -17,9 +17,10 @@ const Sections = () => {
   function SubmitForm (evt) {
     evt.preventDefault();  
 
-    request.post(`/department`, {name: name})
-    .then(data => {
-      if(data.status === 200) { 
+    request.post(`/department`, {name: name}).then(data => {
+      if(data.status === 200) {
+        setSection((prevState) => ([data?.data?.data, ...prevState]))
+        setName("")
         alert("Success")
       }
     })
