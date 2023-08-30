@@ -113,7 +113,7 @@ const Employee = () => {
               <input name='about' type="text" className="form-control"/>
             </div>
             <div className="mb-3">
-              <label className="form-label">Type</label>
+              <label className="form-label">TYPE: Xodim- 1, A'lochilar- 2,</label>
               <input name='type' type="number" className="form-control"/>
             </div>
             <div className="mb-3">

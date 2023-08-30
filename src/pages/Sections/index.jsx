@@ -7,7 +7,7 @@ const Sections = () => {
   const [sections, setSection] = useState()
 
   useEffect(()=> {
-    request.get(`http://13.233.237.234:8080/api/department/getAll`).then(data => {
+    request.get(`/department/getAll`).then(data => {
       if(data.status === 200) {
         setSection(data?.data?.data)
       }

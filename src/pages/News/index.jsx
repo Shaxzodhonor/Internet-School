@@ -9,10 +9,13 @@ const News = () => {
   const [edit, setEdit] = useState()
   const [all, setAll] = useState([])
 
+  const [editNewsImage, setEditNewsImage] = useState()
+
   useEffect(() => {
-    request.get("/news/all").then(data => {
+    request.get("/news").then(data => {
       if (data.status === 200) {
-        setAll(data?.data.data)
+        console.log(data?.data?.data?.content);
+        setAll(data?.data?.data?.content)
       }
     })
   },[])
@@ -30,6 +33,8 @@ const News = () => {
       if(data.status === 200) {
         alert("Success")
         setAll((prevState) => ([data?.data?.data, ...prevState]))
+        Form?.reset()
+        setEditor("")
       }
     })
     .catch((err) => {
@@ -38,8 +43,26 @@ const News = () => {
     })
   }
   function NewsEdit(evt) {
-    evt.preventDefault();    
-    request.post("/news", edit).then(data => {      
+    evt.preventDefault();
+    
+    const MyForm = evt?.target
+    const formData = new FormData(MyForm)
+
+    if (!editNewsImage && !MyForm?.elements["editNewsImageID"]?.files[0]) {
+      formData.delete("file")
+      formData.append("file", 1)
+    } else if(!editNewsImage && MyForm?.elements["editNewsImageID"]?.files[0]) {
+      formData.delete("file")
+      formData.append("file", MyForm?.elements["editNewsImageID"]?.files[0])
+    }
+
+    formData.delete("date")
+    formData.append("date", dayjs(MyForm?.elements["date"]?.value).format("DD/MM/YYYY"))
+    formData.append("about", edit?.about)
+    formData.append("id", edit?.id)
+    
+
+    request.patch("/news", formData).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
         setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))
@@ -64,15 +87,8 @@ const News = () => {
       }
     })
   }
-  function OnChange(evt) {
-    const name = evt.target.name
-    const value = evt.target.value
-    if(name === "file") {
-      setEdit(prevState => ({...prevState, [name]: {id: value}}))
-    } else {
-      setEdit(prevState => ({...prevState, [name]: value}))
-    }
-  }
+
+  console.log(edit);
 return (
     <>
      <div>
@@ -114,9 +130,8 @@ return (
               </div>
               <SunEditor
                 setContents={editor}                
-                setOptions={{                
-                  height: "900px",
-                  font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
+                setOptions={{
+                  font: ['Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                   placeholder: 'Enter content here...',
                   buttonList: [
                       ['undo', 'redo'],
@@ -144,10 +159,13 @@ return (
             <div className="bg-white rounded border p-4">
                 {all?.length ? all.map((news,id) => (
                   <div key={id} className="border my-3 p-3 rounded">
-                    <div><img src={news?.file?.link} alt={news?.title} height={"200px"}/></div>
+                    <img src={news?.file} alt={news?.title} height={"200px"}/>
                     <div>{news?.title}</div>
                     <button type='button' className='btn btn-danger' onClick={Delete.bind(null,news?.id)}>O'chirish</button>
-                    <button type='button' className='btn btn-danger' data-bs-toggle="modal" data-bs-target="#newsModal" onClick={()=> setEdit(news)}>Tahrirlash</button>
+                    <button type='button' className='btn btn-danger' data-bs-toggle="modal" data-bs-target="#newsModal" onClick={()=> {
+                      setEdit(news)
+                      setEditNewsImage(news?.file ? true : false)
+                    }}>Tahrirlash</button>
                   </div>
                 )) : null}
               <div className="modal" tabIndex="-1" id="newsModal">
@@ -161,30 +179,47 @@ return (
                       <form onSubmit={NewsEdit} className='border border-1 border-dark bg-white rounded p-5'>
                         <div className="row">
                           <div className="col">
-                            <div className="mb-3">
-                              <label htmlFor="editNewsImageID" className="form-label">Yangi xabar rasm ID</label>
-                              <input name='file' className="form-control" type="number" id="editNewsImageID" onChange={OnChange} value={edit?.file?.id || ""}/>
-                            </div>
+                            {
+                              editNewsImage
+                                ?
+                                  (
+                                    <div>
+                                      <img src={edit?.file} alt="" width={"100%"}/>
+                                      <button type='button' className='btn btn-danger p-1 my-2' onClick={()=> setEditNewsImage(false)}>O'chirish</button>
+                                    </div>
+                                  )
+                                :
+                                    (
+                                      <div className="mb-3">
+                                        <label htmlFor="editNewsImageID" className="form-label">Yangi xabar rasm ID</label>
+                                        <input name='file' type='file' className="form-control" id="editNewsImageID"/>
+                                      </div>
+                                    )
+                            }
                           </div>
                           <div className="col">
                             <div className="mb-3">
-                              <label htmlFor="news_date" className="form-label">Sana</label>
-                              <input name='date' type="date" className="form-control" id="news_date" onChange={OnChange} value={edit?.date?.slice(0,10) || ""}/>
+                              <label className="form-label">Sana</label>
+                              <input name='date' type="date" className="form-control" onChange={(date)=> setEdit(prst => ({...prst, date: date.target.value}))} value={edit?.date?.slice(0,10) || ""}/>
+                            </div>
+                            <div className="mb-3">
+                              <label className="form-label">Yangi xabar kimlarga taaluqli</label>
+                              <input name='who_from' type="text" className="form-control" placeholder="masalan: ustozlar / o'quvchilar / boshqalar" onChange={(evt)=> setEdit(prst => ({...prst, who_from: evt.target.value}))} value={edit?.who_from || ""}/>
                             </div>
                           </div>
                         </div>
                         <div className="mb-3">
-                          <label htmlFor="news_title" className="form-label">Yangi xabar nomi</label>
-                          <input name='title' type="text" className="form-control" id="news_title" onChange={OnChange} value={edit?.title || ""}/>
+                          <label className="form-label">Yangi xabar nomi</label>
+                          <input name='title' type="text" className="form-control" onChange={(evt)=> setEdit(prst => ({...prst, title: evt.target.value}))} value={edit?.title || ""}/>
                         </div>
+
                         <div className="mb-3">
-                          <label htmlFor="news_who_from" className="form-label">Yangi xabar kimlarga taaluqli</label>
-                          <input name='who_from' type="text" className="form-control" id="news_who_from" placeholder="masalan: ustozlar / o'quvchilar / boshqalar" onChange={OnChange} value={edit?.who_from || ""}/>
+                          <label className="form-label">Qisqacha</label>
+                          <textarea className='form-control' name="shortly" cols="30" rows="4" onChange={(evt)=> setEdit(prst => ({...prst, shortly: evt.target.value}))} value={edit?.shortly || ""}></textarea>
                         </div>
                         <SunEditor
-                          setContents={edit?.body}                          
-                          setOptions={{                
-                            height: "900px",
+                          setContents={edit?.about}                         
+                          setOptions={{
                             font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                             placeholder: 'Enter content here...',
                             buttonList: [
@@ -200,7 +235,7 @@ return (
                               ['preview', 'print', 'save'],
                             ],
                           }}
-                          onChange={(evt) => setEdit(prState => ({...prState, body: evt}))}
+                          onChange={(evt) => setEdit(prState => ({...prState, about: evt}))}
                         />
                         <button type='submit' className='btn btn-outline-dark mt-4'>Tayyor</button>
                       </form>
