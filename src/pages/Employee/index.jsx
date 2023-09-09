@@ -72,11 +72,18 @@ const Employee = () => {
     evt.preventDefault(); 
 
     const formData = new FormData(evt.target);
+
     formData.append("id", edit?.id)
     formData.append("editor", edit?.editor)
 
-    if(listFile === 1) {
-      formData.append("list_files", 1)
+    if(listFile === 0) {
+      formData.append("list_id", 0)
+    } else {
+      formData.append("list_id", 1)
+    } 
+
+    if(!imageEmployee) {
+      formData.append("photo_file", 0)
     }
     request.patch(`/employee`, formData).then(data => {
       if(data.status === 200) {
@@ -142,8 +149,7 @@ const Employee = () => {
             </div>
             <SunEditor
               setContents={editor}                
-              setOptions={{                
-                height: "900px",
+              setOptions={{
                 font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                 placeholder: 'Enter content here...',
                 buttonList: [
@@ -271,8 +277,7 @@ const Employee = () => {
             
               <SunEditor
                 setContents={edit?.editor}                
-                setOptions={{                
-                  height: "900px",
+                setOptions={{
                   font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                   placeholder: 'Enter content here...',
                   buttonList: [

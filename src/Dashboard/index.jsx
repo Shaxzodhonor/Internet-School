@@ -11,7 +11,6 @@ import Menu from './Menu';
 import Subjects from '../pages/Subjects';
 import Employee from '../pages/Employee';
 import Direction from '../pages/Direction';
-import ExamplaryPerson from '../pages/ExamplaryPerson';
 import Events from '../pages/Events';
 import Government from '../pages/Government';
 
@@ -35,7 +34,6 @@ const Dashboard = () => {
               <Route path={"/subject"} component={Subjects} />
               <Route path={"/employee"} component={Employee} />
               <Route path={"/direction"} component={Direction} />
-              <Route path={"/aspirant"} component={ExamplaryPerson} />
             </Switch>
           </div>
         </div>
