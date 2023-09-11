@@ -43,7 +43,7 @@ const Direction = () => {
   function DirectionId(evt) {
     evt.preventDefault();   
     
-    request.post("/direction", edit).then(data => {      
+    request.patch("/direction", edit).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
         setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))

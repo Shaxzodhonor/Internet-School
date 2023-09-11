@@ -239,10 +239,10 @@ const Employee = () => {
                     </div>
                   )
               }
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 <input type="file" name='list_files' className="form-control" disabled={listFile !== 2}/>
                 <button className="btn btn-outline-success" type="button" onClick={()=> setListFile(2)}>Yangi tanlash</button>
-                <button class="btn btn-outline-danger" type="button" onClick={()=> setListFile(1)}>O'chirish</button>
+                <button className="btn btn-outline-danger" type="button" onClick={()=> setListFile(1)}>O'chirish</button>
               </div>           
               <div className="mb-3">
                 <label>F.I.O</label>

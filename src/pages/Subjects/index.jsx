@@ -3,24 +3,35 @@ import { Context as LoginContext } from "../../LoginContext";
 import request from '../../request';
 
 const Subjects = () => {
-  const [login] = useContext(LoginContext)
+  const [directions, setDirection] = useState()
   const [output, setOutput] = useState()
 
-  useEffect(() => {
-    request.get("/subject").then(data => {
+  useEffect(() => {    
+    request.get("/department/getAllDepartmentDirection").then(data => {
       if(data.status === 200) {
-        setOutput(data?.data?.data)
+        setDirection(data?.data?.data)
       }
     })
   },[])
+  useEffect(()=>{
+    if(directions?.length) {
+      request.get(`/subject/direction/${directions[0]?.direction_id}`).then(data => {
+        if(data.status === 200) {
+          setOutput(data?.data?.data)
+        }
+      })
+    }
+  },[directions])
 
   function SubmitForm (evt) {
     evt.preventDefault();
-    const input = evt.target.elements[0];
-    request.post(`/subject`,{name: input.value}).then(data => {
+    const dirId = evt.target.elements[0]?.value;
+    const Name = evt.target.elements[1]?.value;
+
+    request.post(`/subject`,{name: Name, direction: {id: dirId}}).then(data => {
       if(data.status === 200) {
         setOutput(prevState => ([...prevState, data?.data?.data]))
-        evt.target.reset()
+        evt.target.elements[1].value = ""
       }
     })
     .catch((err) => {
@@ -28,7 +39,6 @@ const Subjects = () => {
       console.log(err);
     })
   }
-
   function Delete (deleteItem) {
     request.delete(`/subject/${deleteItem}`).then(data => {
       if(data.status === 200) {
@@ -40,20 +50,44 @@ const Subjects = () => {
       console.log(err);
     })
   }
-
+  function SelectedSubjects(id) {
+    request.get(`/subject/direction/${id}`).then(data => {
+      if(data.status === 200) {
+        setOutput(data?.data?.data)
+      }
+    })
+  }
   return (
     <>
       <div className="row h-100">
         <div className="col-5">
           <form onSubmit={SubmitForm} className='border border-1 border-dark bg-white rounded p-5'>       
-            <div className="form-floating mb-3">
-              <input type="text" className="form-control" required/>
-              <label>Lavozimi</label>
+            <div className='mb-3'>
+              <label className="form-label">Yo'nalishni tanlang</label>
+              <select className="form-select form-select" name='direction' defaultValue={"Open this select menu"}>
+                <option disabled>Bo'limni tanlang</option>
+                {directions?.length ? directions.map((dir, id) => (
+                  <option key={id} value={dir?.direction_id}>{dir?.direction_name}</option>
+                )) : null}
+              </select>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="direction_name" className="form-label">Nomini kiriting</label>
+              <input name='name' type="text" className="form-control" id="direction_name"/>
             </div>
             <button type='submit' className='btn btn-outline-dark mt-3'>Submit</button>
           </form>
         </div>
         <div className="col-7 h-100">
+          <div className='mb-3'>
+            <label className="form-label">Yo'nalishni tanlang</label>
+            <select className="form-select form-select"  defaultValue={"Open this select menu"} onChange={(evt) => SelectedSubjects(evt?.target?.value)}>
+              <option disabled>Bo'limni tanlang</option>
+              {directions?.length ? directions.map((dir, id) => (
+                <option key={id} value={dir?.direction_id}>{dir?.direction_name}</option>
+              )) : null}
+            </select>
+          </div>
           <div className='h-100 border border-1 border-dark bg-white rounded p-5'>
             {
               output?.length 

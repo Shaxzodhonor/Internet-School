@@ -6,6 +6,15 @@ function Menu() {
   
   return(
     <div className="list-group list-group-flush rounded-0 bg-white flex-shrink-0" style={{width: "270px"}}>
+      <NavLink to={"/school"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
+        Maktab
+      </NavLink> 
+      <NavLink to={"/acceptance"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
+        Qabul
+      </NavLink>
+      <NavLink to={"/contact"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
+        Kontakt
+      </NavLink> 
       <NavLink to={"/sections"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
         Bo'limlar           
       </NavLink>      
