@@ -156,7 +156,7 @@ const Direction = () => {
                         </div>
                         <SunEditor
                           setContents={edit?.history}                         
-                          setOptions={{ height: "900px",
+                          setOptions={{ height: "400px",
                             font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                             placeholder: 'Enter content here...',
                             buttonList: [

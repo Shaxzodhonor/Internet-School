@@ -16,6 +16,7 @@ import Government from '../pages/Government';
 import Acceptance from '../pages/Acceptance';
 import School from '../pages/School';
 import Contact from '../pages/Contact';
+import Science from '../pages/Science';
 
 const Dashboard = () => {
   return (
@@ -40,6 +41,7 @@ const Dashboard = () => {
               <Route path={"/subject"} component={Subjects} />
               <Route path={"/employee"} component={Employee} />
               <Route path={"/direction"} component={Direction} />
+              <Route path={"/science"} component={Science} />
             </Switch>
           </div>
         </div>

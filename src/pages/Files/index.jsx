@@ -35,9 +35,11 @@ const Files = () => {
     formData.append("file", inputFile);
 
     request.post(`/file?type=${Form[1]?.value}`, formData).then(data => {      
-      if(data.status === "success") {
-        setAllFile((prevState) => ([data?.data, ...prevState]))
+      if(data.status === 200) {
+        console.log(data?.data?.data);
+        setAllFile((prevState) => ([data?.data?.data, ...prevState]))
         setOutput(data?.data?.data)
+        alert("Success")
       }
     })
     .catch((err) => {
@@ -48,7 +50,7 @@ const Files = () => {
 
   function Delete () {
     request.delete(`/file/${deleteItem}`).then(data => {      
-      if(data.status === "success") {
+      if(data.status === 200) {
         setAllFile(prevState => prevState.filter(val => val.id != deleteItem))
         document.getElementById("closeModal").click()
       }

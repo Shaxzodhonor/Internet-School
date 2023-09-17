@@ -24,6 +24,9 @@ function Menu() {
         </NavLink>
         <NavLink exact to={"/statistics"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
           Statistika
+        </NavLink>
+        <NavLink exact to={"/science"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
+          Ilmiy ishlar
         </NavLink>      
         <NavLink exact to={"/partners"} className={"list-group-item list-group-item-action list-group-item-light py-3"} activeClassName={"active"}>
           Hamkorlar
