@@ -17,6 +17,7 @@ import Acceptance from '../pages/Acceptance';
 import School from '../pages/School';
 import Contact from '../pages/Contact';
 import Science from '../pages/Science';
+import Child from '../pages/Children';
 
 const Dashboard = () => {
   return (
@@ -42,6 +43,7 @@ const Dashboard = () => {
               <Route path={"/employee"} component={Employee} />
               <Route path={"/direction"} component={Direction} />
               <Route path={"/science"} component={Science} />
+              <Route path={"/child"} component={Child} />
             </Switch>
           </div>
         </div>
