@@ -1,4 +1,4 @@
-import 'suneditor/dist/css/suneditor.min.css';
+// import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
 import React, { useEffect, useState, } from 'react';
 import request from '../../request';

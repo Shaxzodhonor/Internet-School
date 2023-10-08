@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Context as LoginContext } from "../../LoginContext";
 import request from '../../request';
-import 'suneditor/dist/css/suneditor.min.css';
+// import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
 
 const Employee = () => {

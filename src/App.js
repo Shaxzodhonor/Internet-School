@@ -1,6 +1,6 @@
 import './App.scss';
 import { Switch } from 'react-router-dom';
-
+import 'suneditor/dist/css/suneditor.min.css'
 // components
 import Login from './pages/Login';
 import Private from './Private';

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import request from '../../request';
-import 'suneditor/dist/css/suneditor.min.css';
+// import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
 
 const Science = () => {
@@ -165,7 +165,7 @@ const Science = () => {
                   </select>
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Yo'nalish</label>
+                  <label className="form-label">additional bo'limini tanlang</label>
                   <select name='direction_id' className="form-select">
                     {direction?.length ? direction.map((value) => (
                       <option key={value.id} value={value.id}>{value.name}</option>
@@ -265,7 +265,7 @@ const Science = () => {
                 </div>
                 <div className="col">
                   <div className="mb-3">
-                    <label className="form-label">Yo'nalish</label>
+                    <label className="form-label">additional bo'limini tanlang</label>
                     <select name='direction_id' className="form-select" value={edit?.direction_id || ""} onChange={(evt)=> setEdit(prState => ({...prState, direction_id: evt?.target?.value}))}>
                       {direction?.length ? direction.map((value) => (
                         <option key={value.id} value={value.id}>{value.name}</option>

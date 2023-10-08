@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import request from '../../request';
-import 'suneditor/dist/css/suneditor.min.css';
+// import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
 
 const Index = () => {
@@ -98,7 +98,7 @@ const Index = () => {
       console.log(err);
     })
   }
-  
+  console.log(edit);
   return (
     <>      
       <div className="h-100">
@@ -241,7 +241,7 @@ const Index = () => {
                   <div>
                     <label className="form-label">Diplom / Fahriy yorliq</label>
                     <div className="input-group">
-                      <input type="file" name='list_files' className="form-control" disabled={listFile !== 2}/>
+                      <input type="file" name='list_files' className="form-control" disabled={listFile !== 2} multiple/>
                       <button className="btn btn-outline-success" type="button" onClick={()=> setListFile(2)}>Yangi tanlash</button>
                       <button className="btn btn-outline-danger" type="button" onClick={()=> setListFile(1)}>O'chirish</button>
                     </div>
