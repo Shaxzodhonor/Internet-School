@@ -149,7 +149,7 @@ const Science = () => {
             <div className="modal-body">
               <form onSubmit={SubmitForm} className='border border-1 border-dark bg-white rounded p-5'>           
                 <div className="mb-3">
-                  <label>F.I.O</label>
+                  <label>F.I.O</label>  
                   <input name='fullName' type="text" className="form-control" required />
                 </div>            
                 <div className="mb-3">

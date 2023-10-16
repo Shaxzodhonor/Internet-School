@@ -12,7 +12,7 @@ const Employee = () => {
   const [editor, setEditor] = useState()
   const [edit, setEdit] = useState()
   
-  const [all, setAll] = useState()
+  const [all, setAll] = useState([])
   const [imageEmployee, setImageEmployee] = useState(false)
   const [listFile, setListFile] = useState(0)
 
@@ -34,11 +34,13 @@ const Employee = () => {
       }
     })
   },[])
+
   function SubmitForm (evt) {
-    evt.preventDefault(); 
+    evt.preventDefault();
     const formData = new FormData(evt.target)
-    formData.append("editor", editor)
-    formData.append("type", 1)
+    formData.append("editor", editor?.editor)
+    formData.append("about", editor?.about)
+    formData.append("type", 1);
     if(evt?.target?.list_files?.files?.length == 0) {
       formData.delete("list_files")
       formData.append("list_files", [])
@@ -47,8 +49,9 @@ const Employee = () => {
     request.post(`/employee`, formData)
     .then(data => {
       if(data.status === 200) {
-        setOutput(prevState => ([...prevState, data?.data?.data]))
+        setAll(prevState => ([...prevState, data?.data?.data]))
         evt.target.reset()
+        setEditor({about: "", editor:""})
         alert("Success")
       }
     })
@@ -76,6 +79,7 @@ const Employee = () => {
 
     formData.append("id", edit?.id)
     formData.append("editor", edit?.editor)
+    formData.append("about", edit?.about)
     formData.append("type", 1)
 
     if(listFile === 0) {
@@ -89,7 +93,6 @@ const Employee = () => {
     }
     request.patch(`/employee`, formData).then(data => {
       if(data.status === 200) {
-        evt.target.reset()
         setAll(prevState => prevState.map(val => val.id === data?.data?.data?.id ? data?.data?.data : val))
         alert("Success")
       }
@@ -134,7 +137,6 @@ const Employee = () => {
                       <div><img src={value.photoLink} alt="---" width={"100%"}/></div>
                       <div className='mb-3 p-2'>
                         <div className='pt-2 fw-bold'>{value?.fullName}</div>
-                        <div className='pt-2 truncate-2 fst-italic'>{value?.about}</div>
                         <div className='pt-2 text-info fw-bold'>{value?.position_name}</div>
                         <div className="d-flex align-items-center justify-content-between">
                           <span className='bg-info text-white px-2 rounded'>ID: {value.id}</span>
@@ -174,7 +176,26 @@ const Employee = () => {
               </div>            
               <div className="mb-3">
                 <label className="form-label">Qisqacha</label>
-                <input name='about' type="text" className="form-control"/>
+                <SunEditor
+                  setContents={editor?.about}                
+                  setOptions={{
+                    font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
+                    placeholder: 'Enter content here...',
+                    buttonList: [
+                        ['undo', 'redo'],
+                        ['font', 'fontSize', 'formatBlock', 'lineHeight'],
+                        ['paragraphStyle', 'blockquote'],
+                        ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+                        ['fontColor', 'hiliteColor', 'textStyle'],
+                        ['outdent', 'indent'],
+                        ['align', 'horizontalRule', 'list'],
+                        ['table', 'link', 'image', 'video', 'audio'],
+                        ['fullScreen', 'showBlocks', 'codeView'],
+                        ['preview', 'print', 'save'],
+                      ],
+                  }}
+                  onChange={(evt) => setEditor(prState => ({...prState, about: evt}))}
+                />
               </div>
               <div className="mb-3">
                 <label className="form-label">Position</label>
@@ -201,7 +222,7 @@ const Employee = () => {
                 <input name='list_files' type="file" className="form-control" multiple/>
               </div>
               <SunEditor
-                setContents={editor}                
+                setContents={editor?.editor}
                 setOptions={{
                   font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                   placeholder: 'Enter content here...',
@@ -218,7 +239,7 @@ const Employee = () => {
                       ['preview', 'print', 'save'],
                     ],
                 }}
-                onChange={(evt) => setEditor(evt)}
+                onChange={(evt) => setEditor(prState => ({...prState, editor: evt}))}
               />
               <button type='submit' className='btn btn-outline-dark mt-3'>Submit</button>
             </form>
@@ -268,7 +289,27 @@ const Employee = () => {
               </div>            
               <div className="mb-3">
                 <label className="form-label">Qisqacha</label>
-                <textarea name="about" className="form-control" cols="30" rows="5" value={edit?.about || ""} onChange={(evt)=> setEdit(prState => ({...prState, about: evt?.target?.value}))}></textarea>
+                <SunEditor
+                  setContents={edit?.about}
+                  height='200px'
+                  setOptions={{
+                    font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
+                    placeholder: 'Enter content here...',
+                    buttonList: [
+                        ['undo', 'redo'],
+                        ['font', 'fontSize', 'formatBlock', 'lineHeight'],
+                        ['paragraphStyle', 'blockquote'],
+                        ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+                        ['fontColor', 'hiliteColor', 'textStyle'],
+                        ['outdent', 'indent'],
+                        ['align', 'horizontalRule', 'list'],
+                        ['table', 'link', 'image', 'video', 'audio'],
+                        ['fullScreen', 'showBlocks', 'codeView'],
+                        ['preview', 'print', 'save'],
+                      ],
+                  }}
+                  onChange={(evt) => setEdit(prState => ({...prState, about: evt}))}
+                />
               </div>
               <div className='d-flex justify-content-between'>
                 <div className="mb-3">
@@ -291,8 +332,7 @@ const Employee = () => {
                     )) : null}
                   </select>
                 </div>           
-              </div>
-            
+              </div>            
               <SunEditor
                 setContents={edit?.editor}                
                 setOptions={{
