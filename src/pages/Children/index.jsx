@@ -35,7 +35,8 @@ const Index = () => {
   function SubmitForm (evt) {
     evt.preventDefault(); 
     const formData = new FormData(evt.target)
-    formData.append("editor", editor)
+    formData.append("editor", editor?.editor)
+    formData.append("about", editor?.about)
     formData.append("type", 6)
     if(evt?.target?.list_files?.files?.length == 0) {
       formData.delete("list_files")
@@ -47,6 +48,7 @@ const Index = () => {
       if(data.status === 200) {
         setAll(prevState => ([...prevState, data?.data?.data]))
         evt.target.reset()
+        setEditor({about: "", editor:""})
         alert("Success")
         submitCose?.current?.click()
       }
@@ -75,6 +77,7 @@ const Index = () => {
 
     formData.append("id", edit?.id)
     formData.append("editor", edit?.editor)
+    formData.append("about", edit?.about)
     formData.append("type", 6)
 
     if(listFile === 0) {
@@ -178,11 +181,8 @@ const Index = () => {
                   </div>                
                 <div className="mb-3">
                   <label className="form-label">Qisqacha</label>
-                  <input name='about' type="text" className="form-control" required/>
-                </div>
-                </div>          
-                <SunEditor
-                  setContents={editor}                
+                  <SunEditor
+                  setContents={editor?.about}
                   setOptions={{
                     font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
                     placeholder: 'Enter content here...',
@@ -199,7 +199,29 @@ const Index = () => {
                         ['preview', 'print', 'save'],
                       ],
                   }}
-                  onChange={(evt) => setEditor(evt)}
+                  onChange={(evt) => setEditor(prState => ({...prState, about: evt}))}
+                />
+                </div>
+                </div>          
+                <SunEditor
+                  setContents={editor?.editor}                
+                  setOptions={{
+                    font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
+                    placeholder: 'Enter content here...',
+                    buttonList: [
+                        ['undo', 'redo'],
+                        ['font', 'fontSize', 'formatBlock', 'lineHeight'],
+                        ['paragraphStyle', 'blockquote'],
+                        ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+                        ['fontColor', 'hiliteColor', 'textStyle'],
+                        ['outdent', 'indent'],
+                        ['align', 'horizontalRule', 'list'],
+                        ['table', 'link', 'image', 'video', 'audio'],
+                        ['fullScreen', 'showBlocks', 'codeView'],
+                        ['preview', 'print', 'save'],
+                      ],
+                  }}
+                  onChange={(evt) => setEditor(prState => ({...prState, editor: evt}))}
                 />
                 <button type='submit' className='btn btn-outline-dark mt-3'>Submit</button>
               </form>
@@ -270,7 +292,26 @@ const Index = () => {
                 <div className="col-7">
                   <div className="mb-3">
                     <label className="form-label">Qisqacha</label>
-                    <textarea name="about" className="form-control" cols="30" rows="2" value={edit?.about || ""} onChange={(evt)=> setEdit(prState => ({...prState, about: evt?.target?.value}))}></textarea>
+                    <SunEditor
+                      setContents={edit?.about}                
+                      setOptions={{
+                        font: ['LagunaC', 'Monserrat', 'Arial', 'Verdana', 'Roboto', 'Georgia', 'sans-serif'],
+                        placeholder: 'Enter content here...',
+                        buttonList: [
+                            ['undo', 'redo'],
+                            ['font', 'fontSize', 'formatBlock', 'lineHeight'],
+                            ['paragraphStyle', 'blockquote'],
+                            ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+                            ['fontColor', 'hiliteColor', 'textStyle'],
+                            ['outdent', 'indent'],
+                            ['align', 'horizontalRule', 'list'],
+                            ['table', 'link', 'image', 'video', 'audio'],
+                            ['fullScreen', 'showBlocks', 'codeView'],
+                            ['preview', 'print', 'save'],
+                          ],
+                      }}
+                      onChange={(evt) => setEdit(prState => ({...prState, about: evt}))}
+                    />
                   </div>
                 </div>
                 <div className="col">
