@@ -59,7 +59,7 @@ const Direction = () => {
   function Delete (deleteItem) {
     request.delete(`/direction/${deleteItem}`).then(data => {
       if (data?.status === 200) {
-        setAll(prevState => prevState.filter(val => val.direction_id != deleteItem))
+        setAll(prevState => prevState.filter(val => val.id != deleteItem))
         alert("Success")
       }
     })
@@ -112,7 +112,7 @@ const Direction = () => {
             <button type='submit' className='btn btn-outline-dark mt-3'>Submit</button>
           </form>
         </div>
-        <div className="col-7 h-100">
+        <div className="col-7">
           <div className='h-100 border border-1 border-dark bg-white rounded p-5'>
             <select className="form-select form-select" defaultValue={0} onChange={(evt) => {
               DirectionSelect(evt.target.value)

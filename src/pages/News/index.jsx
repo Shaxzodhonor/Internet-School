@@ -27,7 +27,7 @@ const News = () => {
     formData.append("about", editor || "")
 
     formData.delete("date")
-    formData.append("date", dayjs(Form?.elements[1]?.value).format("DD/MM/YYYY"))
+    formData.append("date", dayjs(Form?.elements[1]?.value).format("DD-MM-YYYY"))
 
     request.post("/news", formData).then(data => {      
       if(data.status === 200) {
@@ -57,7 +57,7 @@ const News = () => {
     }
 
     formData.delete("date")
-    formData.append("date", dayjs(MyForm?.elements["date"]?.value).format("DD/MM/YYYY"))
+    formData.append("date", dayjs(MyForm?.elements["date"]?.value).format("DD-MM-YYYY"))
     formData.append("about", edit?.about)
     formData.append("id", edit?.id)
     
