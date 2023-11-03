@@ -12,10 +12,10 @@ const News = () => {
   const [editNewsImage, setEditNewsImage] = useState()
 
   useEffect(() => {
-    request.get("/news").then(data => {
+    request.get("/news?size=50").then(data => {
       if (data.status === 200) {
-        console.log(data?.data?.data?.content);
         setAll(data?.data?.data?.content)
+        console.log(data?.data?.data?.content,"sdfsdfsd");
       }
     })
   },[])
@@ -88,7 +88,6 @@ const News = () => {
     })
   }
 
-  console.log(edit);
 return (
     <>
      <div>

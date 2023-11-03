@@ -12,7 +12,7 @@ const Event = () => {
   const [editEventImage, setEditEventImage] = useState()
 
   useEffect(() => {
-    request.get("/event?page=0&size=3&direction=desc").then(data => {
+    request.get("/event?page=0&size=50&direction=desc").then(data => {
       if (data.status === 200) {
         setAll(data?.data?.data?.content)
       }
