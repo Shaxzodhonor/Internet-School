@@ -5,7 +5,6 @@ import request from '../../request';
 import dayjs from 'dayjs';
 
 const Event = () => {
-  const [editor, setEditor] = useState()
   const [edit, setEdit] = useState()
   const [all, setAll] = useState([])
 
@@ -17,13 +16,13 @@ const Event = () => {
         setAll(data?.data?.data?.content)
       }
     })
-  },[])
+  },[]);
+  
   function SubmitForm (evt) {
     evt.preventDefault();
 
     const Form = evt.target;
     const formData = new FormData(Form);
-
     formData.delete("date")
     formData.append("date", dayjs(Form?.elements[1]?.value).format("DD-MM-YYYY"))
 
@@ -72,7 +71,7 @@ const Event = () => {
   }  
 
   function Delete(id) {
-    request.delete(`/news/${id}`).then(data => {
+    request.delete(`/event/${id}`).then(data => {
       if (data?.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != id))
       }
