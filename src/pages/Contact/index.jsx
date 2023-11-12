@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import request from '../../request';
 
-
 const General = () => {
   const [editor, setEditor] = useState(null);
 

@@ -21,7 +21,7 @@ const Direction = () => {
   function SubmitForm (evt) {
     evt.preventDefault();
     const form = evt.target.elements;
-    const obj = [...Array(2)].reduce((acc, _, id) => {    
+    const obj = [...Array(3)].reduce((acc, _, id) => {    
       return form[id]?.name === "department" ? {...acc, department: {id: form[id]?.value}} : {...acc, [form[id]?.name]: form[id]?.value}
     },{})
     
@@ -41,8 +41,7 @@ const Direction = () => {
 
   }
   function DirectionId(evt) {
-    evt.preventDefault();   
-    
+    evt.preventDefault();
     request.patch("/direction", edit).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
@@ -76,14 +75,21 @@ const Direction = () => {
       <div className="row h-100">
         <div className="col-5">
           <form onSubmit={SubmitForm} className='border border-1 border-dark bg-white rounded p-5'>       
-            <div className='mb-3'>
-              <label className="form-label">Bo'lim nomi</label>
-              <select className="form-select form-select" name='department' defaultValue={"Open this select menu"}>
-                <option disabled>Bo'limni tanlang</option>
-                {department?.length ? department.map((dep) => (
-                  <option key={dep?.id} value={dep?.id}>{dep?.name}</option>
-                )) : null}
-              </select>
+           
+            <div className='row'>
+              <div className="col-6">
+                <label className="form-label">Bo'lim nomi</label>
+                <select className="form-select form-select" name='department' defaultValue={"Open this select menu"}>
+                  <option disabled>Bo'limni tanlang</option>
+                  {department?.length ? department.map((dep) => (
+                    <option key={dep?.id} value={dep?.id}>{dep?.name}</option>
+                  )) : null}
+                </select>
+              </div>
+              <div className="col-6">
+                <label htmlFor="level_direction" className="form-label">Tartib</label>
+                <input name='level' type="number" className="form-control" id="level_direction"/>
+              </div>
             </div>
             <div className="mb-3">
               <label htmlFor="direction_name" className="form-label">Yo'naish nomi</label>
@@ -141,14 +147,20 @@ const Direction = () => {
                     </div>
                     <div className="modal-body">
                       <form onSubmit={DirectionId} className='border border-1 border-dark bg-white rounded p-5'>
-                        <div className='mb-3'>
-                          <label className="form-label">Bo'limni tanlang</label>
-                          <select className="form-select form-select" value={edit?.department?.id}  onChange={(evt)=> setEdit(prSt => ({...prSt, department: {id: evt.target.value}}))}>
-                            <option disabled>Bo'limni tanlang</option>
-                            {department?.length ? department.map((dep) => (
-                              <option key={dep?.id} value={dep?.id}>{dep?.name}</option>
-                            )) : null}
-                          </select>
+                        <div className="row">
+                          <div className='col-6'>
+                            <label className="form-label">Bo'limni tanlang</label>
+                            <select className="form-select form-select" value={edit?.department?.id}  onChange={(evt)=> setEdit(prSt => ({...prSt, department: {id: evt.target.value}}))}>
+                              <option disabled>Bo'limni tanlang</option>
+                              {department?.length ? department.map((dep) => (
+                                <option key={dep?.id} value={dep?.id}>{dep?.name}</option>
+                              )) : null}
+                            </select>
+                          </div>
+                          <div className="col-6">
+                            <label htmlFor="level_direction" className="form-label">Tartib</label>
+                            <input name='level' type="number" className="form-control" id="level_direction" value={edit?.level || ""} onChange={(evt) => setEdit(prState => ({...prState, level: evt.target.value}))}/>
+                          </div>
                         </div>
                         <div className="mb-3">
                           <label htmlFor="direction_name_edit" className="form-label">Yo'naish nomi</label>

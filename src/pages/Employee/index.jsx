@@ -41,6 +41,7 @@ const Employee = () => {
     formData.append("editor", editor?.editor)
     formData.append("about", editor?.about)
     formData.append("type", 1);
+    formData.append("level", editor?.level);
     if(evt?.target?.list_files?.files?.length == 0) {
       formData.delete("list_files")
       formData.append("list_files", [])
@@ -169,11 +170,17 @@ const Employee = () => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-            <form onSubmit={SubmitForm} className='border border-1 border-dark bg-white rounded p-5'>           
-              <div className="mb-3">
-                <label>F.I.O</label>
-                <input name='fullName' type="text" className="form-control" required />
-              </div>            
+            <form onSubmit={SubmitForm} className='border border-1 border-dark bg-white rounded p-5'>
+              <div className="row">
+                <div className="col-9">
+                  <label>F.I.O</label>
+                  <input name='fullName' type="text" className="form-control" required />
+                </div>
+                <div className="col-3">
+                  <label>Tartib</label>
+                  <input name='level' type="number" className="form-control" />
+                </div>
+              </div>
               <div className="mb-3">
                 <label className="form-label">Qisqacha</label>
                 <SunEditor
@@ -286,7 +293,11 @@ const Employee = () => {
               <div className="mb-3">
                 <label>F.I.O</label>
                 <input name='fullName' type="text" value={edit?.fullName || ""} onChange={(evt)=> setEdit(prState => ({...prState, fullName: evt?.target?.value}))} className="form-control" required />
-              </div>            
+              </div>
+              <div className="mb-3">
+                <label>Tartib</label>
+                <input name='level' type="number" value={edit?.level || ""} onChange={(evt)=> setEdit(prState => ({...prState, level: evt?.target?.value}))} className="form-control"/>
+              </div>
               <div className="mb-3">
                 <label className="form-label">Qisqacha</label>
                 <SunEditor
