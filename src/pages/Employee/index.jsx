@@ -37,11 +37,18 @@ const Employee = () => {
 
   function SubmitForm (evt) {
     evt.preventDefault();
+
+    console.log("event ", evt?.target?.level.value ? true : false);
+
     const formData = new FormData(evt.target)
     formData.append("editor", editor?.editor)
     formData.append("about", editor?.about)
     formData.append("type", 1);
-    formData.append("level", editor?.level);
+    
+    if (!evt?.target?.level.value) {
+      formData.delete("level")
+      formData.append("level", null)
+    }
     if(evt?.target?.list_files?.files?.length == 0) {
       formData.delete("list_files")
       formData.append("list_files", [])
@@ -81,6 +88,7 @@ const Employee = () => {
     formData.append("id", edit?.id)
     formData.append("editor", edit?.editor)
     formData.append("about", edit?.about)
+    formData.append("level", edit?.level)
     formData.append("type", 1)
 
     if(listFile === 0) {
