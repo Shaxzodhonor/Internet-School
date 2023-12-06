@@ -11,7 +11,7 @@ function Header() {
     .then(data => setAdmin(data))
   },[])
   return(
-    <header style={{height: "80px",flexShrink: "0", backgroundColor: "#f4f4f4"}} className="container-fluid d-flex">
+    <header style={{height: "50px",flexShrink: "0", backgroundColor: "#f4f4f4"}} className="container-fluid d-flex">
       <div className="ms-auto d-flex align-items-center">
         <select name="language" className="language">
           <option value="o'zbek">O'zb</option>
