@@ -35,7 +35,7 @@ const Index = () => {
   function SubmitForm (evt) {
     evt.preventDefault(); 
     const formData = new FormData(evt.target)
-    formData.append("editor", editor)
+    formData.append("editor", editor?.editor)
     formData.append("type", 6)
     if(evt?.target?.list_files?.files?.length == 0) {
       formData.delete("list_files")
