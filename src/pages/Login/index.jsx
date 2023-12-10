@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { Context as LoginContext } from "../../LoginContext";
+import request from "../../request"
 // images
 import Girl from "../../assets/images/login-girl.png"
 import Logo from "../../assets/images/site-logo.png"
@@ -32,7 +33,7 @@ function Login() {
       headers: {
         "Content-type": "application/json"
       },
-      body: JSON.stringify({username: login?.value, password: password.value})
+      body: JSON.stringify({login: login?.value, password: password.value})
     })
     .then(res => res.json())
     .then(data => {

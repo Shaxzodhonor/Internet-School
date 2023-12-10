@@ -6,7 +6,7 @@ import { Redirect } from "react-router-dom";
 function Private({path, component, exact, children}) {
   const [login] = useContext(LoginContext)
   
-  if(!login){
+  if(login){
     return <Route path={path} component={component} exact={exact}>{children}</Route>
   } 
     return <Redirect to={"/login"} />
