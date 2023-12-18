@@ -1,17 +1,25 @@
 // import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import request from '../../request';
 import dayjs from 'dayjs';
+import { Context } from '../../LoginContext';
 
 const Event = () => {
   const [edit, setEdit] = useState()
   const [all, setAll] = useState([])
+  const [login] = useContext(Context)
 
   const [editEventImage, setEditEventImage] = useState()
 
   useEffect(() => {
-    request.get("/event?page=0&size=50&direction=desc").then(data => {
+    request.get("/event",{
+      params:{
+        page: 0,
+        size: 50,
+        direction: "desc"
+      }
+    }).then(data => {
       if (data.status === 200) {
         setAll(data?.data?.data?.content)
       }
@@ -25,7 +33,11 @@ const Event = () => {
     formData.delete("date")
     formData.append("date", dayjs(Form?.elements[4]?.value).format("DD-MM-YYYY"))
 
-    request.post("/event", formData).then(data => {      
+    request.post("/event", formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         alert("Success")
         setAll((prevState) => ([data?.data?.data, ...prevState]))
@@ -56,7 +68,11 @@ const Event = () => {
     formData.append("id", edit?.id)
     
     formData.append("end_time", "horizontal")
-    request.patch("/event", formData).then(data => {      
+    request.patch("/event", formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
         setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))
@@ -70,7 +86,11 @@ const Event = () => {
   }  
 
   function Delete(id) {
-    request.delete(`/event/${id}`).then(data => {
+    request.delete(`/event/${id}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if (data?.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != id))
       }
