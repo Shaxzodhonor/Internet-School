@@ -1,5 +1,3 @@
-// import 'suneditor/dist/css/suneditor.min.css';
-import SunEditor from 'suneditor-react';
 import React, { useEffect, useState, useContext} from 'react';
 import request from '../../request';
 import dayjs from 'dayjs';
@@ -9,8 +7,8 @@ const Event = () => {
   const [edit, setEdit] = useState()
   const [all, setAll] = useState([])
   const [login] = useContext(Context)
-
   const [editEventImage, setEditEventImage] = useState()
+
 
   useEffect(() => {
     request.get("/event",{

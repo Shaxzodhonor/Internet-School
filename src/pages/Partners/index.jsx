@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import request from "../../request";
-
+import { Context } from '../../LoginContext';
 const Partners = () => {
   const [all, setAll] = useState();
   const [edit, setEdit] = useState();
   const [editFile, setEditFile] = useState(true);
-  
+  const [login] = useContext(Context)
+
   useEffect(() => {
     request.get("/partner/getAll").then(data => {
       if (data.status === 200) {
@@ -20,7 +21,15 @@ const Partners = () => {
     const formData = new FormData();
     formData.append("photo", input);
 
-    request.post(`/partner?name=${Form[1]?.value}&linkWebsite=${Form[2]?.value}`, formData).then(data => {      
+    request.post(`/partner`, formData, {
+      params:{
+        name: Form[1]?.value,
+        linkWebsite: Form[2]?.value
+      },
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         setAll((prevState) => ([data?.data?.data, ...prevState]))
         alert("Success")
@@ -41,7 +50,16 @@ const Partners = () => {
     } else {
       formData.append("photo", "")
     }
-    request.patch(`/partner?name=${edit?.name}&linkWebsite=${edit?.linkWebsite}&id=${edit?.id}`, formData).then(data => {      
+    request.patch(`/partner`, formData, {
+      params:{
+        name: edit?.name,
+        linkWebsite: edit?.linkWebsite,
+        id: edit?.id
+      },
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         setAll(prevState => prevState.map(val => val.id === data?.data?.data?.id ? data?.data?.data : val))
         alert("Success")
@@ -53,7 +71,11 @@ const Partners = () => {
     })
   }
   function Delete(id) {
-    request.delete(`/partner/${id}`).then(data => {
+    request.delete(`/partner/${id}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if (data?.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != id))
         alert("Delete Partner")

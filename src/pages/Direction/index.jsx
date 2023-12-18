@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Context as LoginContext } from "../../LoginContext";
+import { Context  } from "../../LoginContext";
 import SunEditor from 'suneditor-react';
 import request from '../../request';
 
@@ -9,7 +9,7 @@ const Direction = () => {
   const [edit, setEdit] = useState()
   const [all, setAll] = useState([])
   const [department, setDepartment] = useState([])
-
+  const [login] = useContext(Context)
   useEffect(()=>{
     request.get(`/department/getAll`).then(data => {
       if(data?.status === 200) {
@@ -25,7 +25,11 @@ const Direction = () => {
       return form[id]?.name === "department" ? {...acc, department: {id: form[id]?.value}} : {...acc, [form[id]?.name]: form[id]?.value}
     },{})
     
-    request.post(`/direction`, {...obj, history: editor})
+    request.post(`/direction`, {...obj, history: editor}, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    })
     .then(data => {
       if(data.status === 200) {
         evt.target.reset()
@@ -42,7 +46,11 @@ const Direction = () => {
   }
   function DirectionId(evt) {
     evt.preventDefault();
-    request.patch("/direction", edit).then(data => {      
+    request.patch("/direction", edit, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
         setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))
@@ -56,7 +64,11 @@ const Direction = () => {
   
   }  
   function Delete (deleteItem) {
-    request.delete(`/direction/${deleteItem}`).then(data => {
+    request.delete(`/direction/${deleteItem}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if (data?.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != deleteItem))
         alert("Success")

@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { Context as LoginContext } from "../../LoginContext";
@@ -28,18 +27,12 @@ function Login() {
      password.style.border = "1px solid #4F7D96";
     }
     setIndicator({open:true})
-    fetch(`${process.env.REACT_APP_API_ROOT}/admin/sign-in`,{
-      method: "POST",
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify({login: login?.value, password: password.value})
-    })
-    .then(res => res.json())
+
+    request.post("/admin/sign-in",{login: login?.value, password: password.value})
+
     .then(data => {
-      if(data.status === "success"){
-        setLogin(data.data)
-        // window.sessionStorage.setItem('__login', JSON.stringify(login))
+      if(data?.data.status === "success"){
+        setLogin(data?.data.data)
         setIndicator({open:false})
         history.push("/admin")
       } else {

@@ -1,16 +1,14 @@
-import { useEffect, useState } from 'react';
-import SunEditor from 'suneditor-react';
+import { useEffect, useState, useContext } from 'react';
 import request from '../../request';
-
+import { Context } from '../../LoginContext';
 
 const Statistics = () => {
   const [editor, setEditor] = useState();
-
+  const [login] = useContext(Context)
   useEffect(()=>{
     request.get(`/statistic`).then(data => {
       if(data?.status === 200 && data?.data?.data?.length) {
         setEditor(data?.data?.data[0])
-        console.log(data?.data?.data);
       }
     })
   },[])
@@ -18,7 +16,11 @@ const Statistics = () => {
   function EditForm(evt) {
     evt.preventDefault();   
     
-    request.patch("/statistic", editor).then(data => {      
+    request.patch("/statistic", editor, {
+      headers: {
+        "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         alert("Success")
         setEditor(data?.data?.data)

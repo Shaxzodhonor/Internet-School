@@ -1,21 +1,20 @@
-// import 'suneditor/dist/css/suneditor.min.css';
+
 import SunEditor from 'suneditor-react';
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import request from '../../request';
 import dayjs from 'dayjs';
-
+import { Context } from '../../LoginContext';
 const News = () => {
   const [editor, setEditor] = useState()
   const [edit, setEdit] = useState()
   const [all, setAll] = useState([])
-
   const [editNewsImage, setEditNewsImage] = useState()
+  const [login] = useContext(Context)
 
   useEffect(() => {
     request.get("/news?size=50").then(data => {
       if (data.status === 200) {
         setAll(data?.data?.data?.content)
-        console.log(data?.data?.data?.content,"sdfsdfsd");
       }
     })
   },[])
@@ -29,7 +28,11 @@ const News = () => {
     formData.delete("date")
     formData.append("date", dayjs(Form?.elements[1]?.value).format("DD-MM-YYYY"))
 
-    request.post("/news", formData).then(data => {      
+    request.post("/news", formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         alert("Success")
         setAll((prevState) => ([data?.data?.data, ...prevState]))
@@ -47,13 +50,16 @@ const News = () => {
     
     const MyForm = evt?.target
     const formData = new FormData(MyForm)
-
-    if (!editNewsImage && !MyForm?.elements["editNewsImageID"]?.files[0]) {
-      formData.delete("file")
-      formData.append("file", 1)
-    } else if(!editNewsImage && MyForm?.elements["editNewsImageID"]?.files[0]) {
-      formData.delete("file")
-      formData.append("file", MyForm?.elements["editNewsImageID"]?.files[0])
+console.log(editNewsImage, MyForm?.elements["editNewsImageID"]?.files);
+    
+    if (editNewsImage && !MyForm?.elements["editNewsImageID"]?.files[0]) {
+      // formData.delete("file")
+      // formData.append("file", 0)
+      // console.log(111);
+    } else if(!editNewsImage && !MyForm?.elements["editNewsImageID"]?.files[0]) {
+      // console.log(222);
+      // formData.delete("file")
+      // formData.append("file", MyForm?.elements["editNewsImageID"]?.files[0])
     }
 
     formData.delete("date")
@@ -62,7 +68,11 @@ const News = () => {
     formData.append("id", edit?.id)
     
 
-    request.patch("/news", formData).then(data => {      
+    request.patch("/news", formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
         setAll((prevState) => prevState.map(nws => nws?.id === mydata?.id ? mydata : nws))
@@ -73,15 +83,13 @@ const News = () => {
       alert(err?.message)
       console.log(err);
     })
-  }  
-  function TestContent() {
-    const output = document.getElementById('output-content')
-    output.innerHTML = ""
-    output.insertAdjacentHTML('afterbegin', editor)
-    document.getElementById("output_test").click()
   }
   function Delete(id) {
-    request.delete(`/news/${id}`).then(data => {
+    request.delete(`/news/${id}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if (data?.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != id))
       }
@@ -93,8 +101,7 @@ return (
      <div>
         <nav>
           <div className="nav nav-tabs" id="nav-tab" role="tablist">          
-            <button className="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#news-tab-1" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Yangiliklar</button>
-            <button className="nav-link" id="output_test" data-bs-toggle="tab" data-bs-target="#news-tab-2" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Natijani ko'rish</button>
+            <button className="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#news-tab-1" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Yangiliklar</button>            
             <button className="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#news-tab-3" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" >Barchasi</button>
           </div>
         </nav>
@@ -147,12 +154,8 @@ return (
                 }}
                 onChange={(evt) => setEditor(evt)}
               />
-              <button type='button' className='btn btn-warning text-light mt-4' onClick={TestContent}>Test</button>
-              <button type='submit' className='btn btn-outline-dark mt-4 ms-5'>Tayyor</button>
+              <button type='submit' className='btn btn-outline-dark mt-4'>Tayyor</button>
             </form>
-          </div>
-          <div className="tab-pane fade" id="news-tab-2" role="tabpanel" aria-labelledby="output_test" tabIndex="0">
-              <div id='output-content' className="sun-editor-editable py-5 border-success border"></div>
           </div>
           <div className="tab-pane fade" id="news-tab-3" role="tabpanel" aria-labelledby="nav-disabled-tab" tabIndex="0">
             <div className="bg-white rounded border p-4">

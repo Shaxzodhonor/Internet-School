@@ -4,7 +4,6 @@ const request = axios.create({
   baseURL: process.env.REACT_APP_API_ROOT,
   headers: {
     common: {
-      // "Authorization": `Bearer ${window.sessionStorage.getItem("__login")}`,
       "Content-Type": "application/json",
     }
   }

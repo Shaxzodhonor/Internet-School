@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import request from '../../request';
-
+import { Context } from '../../LoginContext';
 const Files = () => {
   const [output, setOutput] = useState();
   const [allFile, setAllFile] = useState([]);
   const [deleteItem, setItem] = useState(null);
-
+  const [login] = useContext(Context)
   useEffect(()=> {
     fetch(`${process.env.REACT_APP_API_ROOT}/file/getAll`)
     .then(res => res.json())
@@ -34,7 +34,11 @@ const Files = () => {
     const formData = new FormData();
     formData.append("file", inputFile);
 
-    request.post(`/file?type=${Form[1]?.value}`, formData).then(data => {      
+    request.post(`/file?type=${Form[1]?.value}`, formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         console.log(data?.data?.data);
         setAllFile((prevState) => ([data?.data?.data, ...prevState]))
@@ -49,7 +53,11 @@ const Files = () => {
   }
 
   function Delete () {
-    request.delete(`/file/${deleteItem}`).then(data => {      
+    request.delete(`/file/${deleteItem}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         setAllFile(prevState => prevState.filter(val => val.id != deleteItem))
         document.getElementById("closeModal").click()

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import request from '../../request';
-
+import { Context } from '../../LoginContext';
 const Sections = () => {
   const [name, setName] = useState("")
   const [edit, setEdit] = useState()
   const [sections, setSection] = useState()
+  const [login] = useContext(Context)
 
   useEffect(()=> {
     request.get(`/department/getAll`).then(data => {
@@ -17,7 +18,11 @@ const Sections = () => {
   function SubmitForm (evt) {
     evt.preventDefault();  
 
-    request.post(`/department`, {name: name}).then(data => {
+    request.post(`/department`, {name: name},{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if(data.status === 200) {
         setSection((prevState) => ([data?.data?.data, ...prevState]))
         setName("")
@@ -32,7 +37,11 @@ const Sections = () => {
   function Edit(evt) {
     evt.preventDefault();
 
-    request.patch("/department", edit).then(data => {      
+    request.patch("/department", edit,{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         const mydata = data?.data?.data
         setSection((prevState) => prevState.map(sect => sect?.id === mydata?.id ? mydata : sect))
@@ -45,7 +54,11 @@ const Sections = () => {
     })
   }  
   function Delete(id) {
-    request.delete(`/department/${id}`).then(data => {
+    request.delete(`/department/${id}`,{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if (data?.status === 200) {
         alert("Success")
         setSection(prevState => prevState.filter(val => val.id != id))

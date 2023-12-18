@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import { Context as LoginContext } from "../../LoginContext";
+import { Context } from "../../LoginContext";
 import request from '../../request';
 
 const Subjects = () => {
   const [directions, setDirection] = useState()
   const [output, setOutput] = useState()
-
+  const [login] = useContext(Context)
   useEffect(() => {    
     request.get("/department/getAllDepartmentDirection").then(data => {
       if(data.status === 200) {
@@ -28,7 +28,11 @@ const Subjects = () => {
     const dirId = evt.target.elements[0]?.value;
     const Name = evt.target.elements[1]?.value;
 
-    request.post(`/subject`,{name: Name, direction: {id: dirId}}).then(data => {
+    request.post(`/subject`,{name: Name, direction: {id: dirId}},{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if(data.status === 200) {
         setOutput(prevState => ([...prevState, data?.data?.data]))
         evt.target.elements[1].value = ""
@@ -40,7 +44,11 @@ const Subjects = () => {
     })
   }
   function Delete (deleteItem) {
-    request.delete(`/subject/${deleteItem}`).then(data => {
+    request.delete(`/subject/${deleteItem}`,{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if(data.status === 200) {
         setOutput(prevState => prevState.filter(val => val.id != deleteItem))
       }      

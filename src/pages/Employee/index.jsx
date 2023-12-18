@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Context as LoginContext } from "../../LoginContext";
+import { Context } from "../../LoginContext";
 import request from '../../request';
 // import 'suneditor/dist/css/suneditor.min.css';
 import SunEditor from 'suneditor-react';
@@ -7,7 +7,7 @@ import SunEditor from 'suneditor-react';
 const Employee = () => {
   const [postion, setPosition] = useState()
   const [direction, setDirection] = useState()
-  const [login] = useContext(LoginContext)
+  const [login] = useContext(Context)
   const [output, setOutput] = useState()
   const [editor, setEditor] = useState()
   const [edit, setEdit] = useState()
@@ -54,7 +54,11 @@ const Employee = () => {
       formData.append("list_files", [])
     }
 
-    request.post(`/employee`, formData)
+    request.post(`/employee`, formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    })
     .then(data => {
       if(data.status === 200) {
         setAll(prevState => ([...prevState, data?.data?.data]))
@@ -70,7 +74,11 @@ const Employee = () => {
 
   }
   function Delete (deleteItem) {
-    request.delete(`/employee/${deleteItem}`).then(data => {
+    request.delete(`/employee/${deleteItem}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if(data.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != deleteItem))
       }      
@@ -100,7 +108,11 @@ const Employee = () => {
     if(!imageEmployee) {
       formData.append("photo_file", 0)
     }
-    request.patch(`/employee`, formData).then(data => {
+    request.patch(`/employee`, formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if(data.status === 200) {
         setAll(prevState => prevState.map(val => val.id === data?.data?.data?.id ? data?.data?.data : val))
         alert("Success")
@@ -112,7 +124,6 @@ const Employee = () => {
     })
   }
   function DirectionSelect(id) {
-    console.log(id);
     request.get(`/employee/direction/${id}`).then(data => {
       if(data?.status === 200) {
         setAll(data?.data?.data)

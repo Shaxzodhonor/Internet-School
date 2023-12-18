@@ -1,18 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
-import { Context as LoginContext } from "../../LoginContext";
+import { Context } from "../../LoginContext";
 import request from '../../request';
 
 const Position = () => {
-  const [login] = useContext(LoginContext)
+  const [login] = useContext(Context)
   const [output, setOutput] = useState()
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_ROOT}/position/getAll`)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      if(data.status === "success") {
-        setOutput(data?.data)
+    request.get("/position/getAll").then(data => {
+      if (data.status === 200) {
+        setOutput(data?.data?.data)
       }
     })
   },[])
@@ -20,7 +17,11 @@ const Position = () => {
   function SubmitForm (evt) {
     evt.preventDefault();
     const input = evt.target.elements[0];
-    request.post("/position",{name: input.value})
+    request.post("/position",{name: input.value},{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    })
     .then(data => {
       if(data.status === 200) {
         setOutput(prevState => ([...prevState, data?.data?.data]))
@@ -33,7 +34,11 @@ const Position = () => {
     })
   }
   function Delete (deleteItem) {
-    request.delete(`/position/${deleteItem}`).then(data => {
+    request.delete(`/position/${deleteItem}`,{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if(data.status === 200) {
         setOutput(prevState => prevState.filter(val => val.id != deleteItem))
       }      

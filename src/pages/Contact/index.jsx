@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import request from '../../request';
-
+import { Context } from '../../LoginContext';
 const General = () => {
   const [editor, setEditor] = useState(null);
-
+  const [login] = useContext(Context)
   useEffect(()=>{
     request.get(`/general`).then(data => {
       if(data?.status === 200 && data?.data?.data?.length) {
@@ -16,7 +16,11 @@ const General = () => {
   function SubmitForm(evt) {
     evt.preventDefault();   
     
-    request.post("/general", editor).then(data => {      
+    request.post("/general", editor, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {        
         alert("Success")
         setEditor(data?.data?.data)
@@ -30,7 +34,11 @@ const General = () => {
   function EditForm(evt) {
     evt.preventDefault();   
     
-    request.patch("/general", editor).then(data => {      
+    request.patch("/general", editor, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {        
         alert("Success")
       }

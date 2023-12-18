@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import SunEditor from 'suneditor-react';
 import request from '../../request';
-
+import { Context } from '../../LoginContext';
 
 const Acceptance = () => {
   const [editor, setEditor] = useState();
-
+  const [login] = useContext(Context)
   useEffect(()=>{
     request.get(`/acceptance`).then(data => {
       if(data?.status === 200 && data?.data?.data?.length) {
@@ -17,7 +17,11 @@ const Acceptance = () => {
   function EditForm(evt) {
     evt.preventDefault();   
     
-    request.patch("/acceptance", editor).then(data => {      
+    request.patch("/acceptance", editor, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         alert("Success")
         setEditor(data?.data?.data)

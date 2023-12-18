@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import SunEditor from 'suneditor-react';
 import request from '../../request';
-
+import { Context } from '../../LoginContext';
 
 const School = () => {
   const [editor, setEditor] = useState();
+  const [login] = useContext(Context)
 
   useEffect(()=>{
     request.get(`/school`).then(data => {
@@ -18,7 +19,11 @@ const School = () => {
   function EditForm(evt) {
     evt.preventDefault();   
     
-    request.patch("/school", editor).then(data => {      
+    request.patch("/school", editor,{
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         alert("Success")
         setEditor(data?.data?.data)

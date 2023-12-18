@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import request from "../../request";
+import { Context } from '../../LoginContext';
 
 const Government = () => {
   const [all, setAll] = useState();
   const [edit, setEdit] = useState();
   const [editFile, setEditFile] = useState(true);
-  
+  const [login] = useContext(Context)
+
   useEffect(() => {
     request.get("/government/getAll").then(data => {
       if (data.status === 200) {
@@ -22,7 +24,11 @@ const Government = () => {
     formData.append("photo", input);
 
    
-    request.post(`/government?name=${Form[1]?.value}&linkWebsite=${Form[2]?.value}`, formData).then(data => {          
+    request.post(`/government?name=${Form[1]?.value}&linkWebsite=${Form[2]?.value}`, formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {          
       if(data.status === 200) {
         setAll((prevState) => ([data?.data?.data, ...prevState]))
         alert("Success")
@@ -43,7 +49,11 @@ const Government = () => {
     } else {
       formData.append("photo", "")
     }
-    request.patch(`/government?name=${edit?.name}&linkWebsite=${edit?.linkWebsite}&id=${edit?.id}`, formData).then(data => {      
+    request.patch(`/government?name=${edit?.name}&linkWebsite=${edit?.linkWebsite}&id=${edit?.id}`, formData, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {      
       if(data.status === 200) {
         setAll(prevState => prevState.map(val => val.id === data?.data?.data?.id ? data?.data?.data : val))
         alert("Success")
@@ -55,21 +65,16 @@ const Government = () => {
     })
   }
   function Delete(id) {
-    request.delete(`/government/${id}`).then(data => {
+    request.delete(`/government/${id}`, {
+      headers: {
+         "Authorization": `Bearer ${login}`
+      }
+    }).then(data => {
       if (data?.status === 200) {
         setAll(prevState => prevState.filter(val => val.id != id))
         alert("Delete Success")
       }
     })
-  }
-  function OnChange(evt) {
-    const name = evt.target.name
-    const value = evt.target.value
-    if(name === "file") {
-      setEdit(prevState => ({...prevState, [name]: {id: value}}))
-    } else {
-      setEdit(prevState => ({...prevState, [name]: value}))
-    }
   }
   return (
     <div className="row h-100">
