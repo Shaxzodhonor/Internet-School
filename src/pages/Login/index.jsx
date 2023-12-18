@@ -37,9 +37,9 @@ function Login() {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       if(data.status === "success"){
         setLogin(data.data)
+        // window.sessionStorage.setItem('__login', JSON.stringify(login))
         setIndicator({open:false})
         history.push("/admin")
       } else {
